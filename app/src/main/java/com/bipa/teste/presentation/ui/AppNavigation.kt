@@ -6,11 +6,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.bipa.teste.util.NetworkUtils
+
 
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
+    val context = LocalContext.current
 
     NavHost(navController = navController, startDestination = "splash") {
         composable("splash") {
@@ -25,6 +28,13 @@ fun AppNavigation() {
         }
 
         composable("main") {
+            if (NetworkUtils.isConnected(context)) {
+                //NodeScreen
+            } else {
+                navController.navigate("offline") {
+                    popUpTo("main") { inclusive = true }
+                }
+            }
 
         }
 
