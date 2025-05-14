@@ -17,7 +17,7 @@ fun AppNavigation() {
             SplashScreen(
                 navController = navController,
                 onTimeout = {
-                    navController.navigate("main") {
+                    navController.navigate("offline") {
                         popUpTo("splash") { inclusive = true }
                     }
                 }
