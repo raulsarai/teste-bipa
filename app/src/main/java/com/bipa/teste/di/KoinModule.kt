@@ -9,6 +9,7 @@ import com.bipa.teste.data.remote.RemoteDataSource
 import com.bipa.teste.data.repository.NodeRepositoryImpl
 import com.bipa.teste.domain.repository.NodeRepository
 import com.bipa.teste.domain.usecase.GetTopNodesUseCase
+import com.bipa.teste.presentation.viewmodel.NodeViewModel
 
 val appModule = module {
     single<ApiService> {
@@ -22,5 +23,7 @@ val appModule = module {
     single { RemoteDataSource(get()) }
     single<NodeRepository> { NodeRepositoryImpl(get()) }
     single { GetTopNodesUseCase(get()) }
+
+    viewModel { NodeViewModel(get()) }
 
 }

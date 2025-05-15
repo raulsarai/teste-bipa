@@ -7,6 +7,6 @@ data class NodeDto(
     val capacity: Long,
     val firstSeen: Long,
     val updatedAt: Long,
-    val city: String?,
+    val city: Map<String, String>?,
     val country: Map<String, String>?
 )

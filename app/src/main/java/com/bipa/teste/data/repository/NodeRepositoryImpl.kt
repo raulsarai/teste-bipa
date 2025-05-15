@@ -23,7 +23,9 @@ class NodeRepositoryImpl(
             capacity = "%.8f BTC".format(it.capacity / 100_000_000.0),
             firstSeen = dateFormatter.format(Instant.ofEpochSecond(it.firstSeen)),
             updatedAt = dateFormatter.format(Instant.ofEpochSecond(it.updatedAt)),
-            country = it.country?.get("pt-BR") ?: it.country?.get("en") ?: "Desconhecido"
+            country   = it.country?.get("pt-BR")
+                ?: it.country?.get("en")
+                ?: "Desconhecido",
         )
     }
 }

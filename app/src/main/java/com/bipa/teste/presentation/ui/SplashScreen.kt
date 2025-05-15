@@ -18,7 +18,6 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
-    navController: NavController,
     onTimeout: () -> Unit
 ) {
     LaunchedEffect(Unit) {

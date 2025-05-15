@@ -6,30 +6,31 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.bipa.teste.presentation.viewmodel.NodeViewModel
 import com.bipa.teste.util.NetworkUtils
 
 
 
 @Composable
-fun AppNavigation() {
+fun AppNavigation(viewModel: NodeViewModel) {
     val navController = rememberNavController()
     val context = LocalContext.current
 
     NavHost(navController = navController, startDestination = "splash") {
         composable("splash") {
             SplashScreen(
-                navController = navController,
                 onTimeout = {
-                    navController.navigate("offline") {
+                    navController.navigate("main") {
                         popUpTo("splash") { inclusive = true }
                     }
                 }
+
             )
         }
 
         composable("main") {
             if (NetworkUtils.isConnected(context)) {
-                //NodeScreen
+                NodeListScreen(viewModel)
             } else {
                 navController.navigate("offline") {
                     popUpTo("main") { inclusive = true }

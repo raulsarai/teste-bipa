@@ -32,7 +32,7 @@ class NodeViewModel(
                 val nodes = getTopNodes()
                 uiState = UiState.Success(nodes)
             } catch (e: Exception) {
-                uiState = UiState.Error("Erro ao carregar os dados: ${'$'}{e.message}")
+                uiState = UiState.Error("Erro ao carregar os dados: ${e.message}")
             }
         }
     }
