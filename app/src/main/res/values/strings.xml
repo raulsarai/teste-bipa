@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">Teste Bipa</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="try_again">Tentar novamente</string>
+    <string name="channels">Canais</string>
+    <string name="capacity">Capacidade</string>
+    <string name="search_by">Buscar por nome, país ou data</string>
+    <string name="order_by">Ordenar por:</string>
+    <string name="close">Fechar</string>
+    <string name="open">Abrir</string>
+    <string name="alias">Alias</string>
+    <string name="country">País</string>
+    <string name="first_seem">Primeiro visto</string>
 </resources>
