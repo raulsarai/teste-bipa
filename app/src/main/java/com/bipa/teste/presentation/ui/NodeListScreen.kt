@@ -1,7 +1,6 @@
 package com.bipa.teste.presentation.ui
 
 
-import androidx.compose.animation.expandVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -55,7 +54,6 @@ fun NodeListScreen(viewModel: NodeViewModel) {
     val refreshing by remember { derivedStateOf { uiState is UiState.Loading } }
     val focusManager = LocalFocusManager.current
 
-
     Column(modifier = Modifier
         .fillMaxSize()
         .padding(16.dp)
@@ -87,10 +85,10 @@ fun NodeListScreen(viewModel: NodeViewModel) {
                 val filtered = nodes
                     .filter { node ->
                         val q = query.trim()
-                                node.alias.contains(q, true) ||
+                        node.alias.contains(q, true) ||
                                 node.country.contains(q, true) ||
-                                node.firstSeen.contains(q, true)
-
+                                node.firstSeen.contains(q, true) ||
+                                node.updatedAt.contains(q, true)
                     }
 
 
@@ -98,19 +96,18 @@ fun NodeListScreen(viewModel: NodeViewModel) {
                         when (sortBy) {
                             stringResource(R.string.channels) -> compareByDescending { it.channels }
                             stringResource(R.string.capacity) -> compareByDescending { it.capacity }
-                            stringResource(R.string.country) -> compareBy { it.country }
                             else         -> compareBy { it.alias }
                         }
                     )
                 SwipeRefresh(state = rememberSwipeRefreshState(refreshing), onRefresh = {
                     viewModel.refresh()
                 }) {
-                Column(Modifier.padding(15.dp)
-                    .pointerInput(Unit) {
-                    detectTapGestures(onTap = {
-                        focusManager.clearFocus()
-                    })
-                }) {
+                    Column(Modifier.padding(15.dp)
+                        .pointerInput(Unit) {
+                            detectTapGestures(onTap = {
+                                focusManager.clearFocus()
+                            })
+                        }) {
 
                     OutlinedTextField(
                         value = query,
@@ -126,7 +123,6 @@ fun NodeListScreen(viewModel: NodeViewModel) {
                         keyboardOptions = KeyboardOptions.Default.copy(
                             imeAction = ImeAction.Done
                         )
-
                     )
 
                     SortDropdown(
@@ -140,7 +136,6 @@ fun NodeListScreen(viewModel: NodeViewModel) {
                     ) {
                         items(filtered) { node ->
                             Card(
-
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(vertical = 8.dp),
@@ -196,7 +191,7 @@ fun SortDropdown(
             onDismissRequest = { expanded = false },
             modifier = Modifier.fillMaxWidth(0.5f)
         ) {
-            listOf(stringResource(R.string.alias), stringResource(R.string.channels), stringResource(R.string.capacity),stringResource(R.string.country)).forEach { option ->
+            listOf(stringResource(R.string.alias), stringResource(R.string.channels), stringResource(R.string.capacity)).forEach { option ->
                 DropdownMenuItem(
                     text = { Text(option) },
                     onClick = {
