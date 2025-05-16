@@ -40,7 +40,15 @@ fun AppNavigation(viewModel: NodeViewModel) {
         }
 
         composable("offline") {
-            OfflineScreen()
+            OfflineScreen(
+                onRetry = {
+                    if (NetworkUtils.isConnected(context)) {
+                        navController.navigate("main") {
+                            popUpTo("offline") { inclusive = true }
+                        }
+                    }
+                }
+            )
         }
     }
 }

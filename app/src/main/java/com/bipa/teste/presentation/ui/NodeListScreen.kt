@@ -16,12 +16,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -30,6 +32,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -39,6 +42,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
@@ -57,8 +61,6 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 fun NodeListScreen(viewModel: NodeViewModel) {
     val uiState = viewModel.uiState
     val refreshing by remember { derivedStateOf { uiState is UiState.Loading } }
-    val focusManager = LocalFocusManager.current
-
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -70,19 +72,38 @@ fun NodeListScreen(viewModel: NodeViewModel) {
                     .fillMaxSize()
                     .background(color = Color.White)
                     , contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
+                    CircularProgressIndicator(
+                        color = Color.Black,
+                        strokeWidth  = 8.dp,
+                    )
                 }
             }
             is UiState.Error -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black), contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(text = uiState.message, color=Color.White)
-                        Button(onClick = { viewModel.refresh() }) {
-                            Text(stringResource(R.string.try_again))
+                        Text(
+                            text = stringResource(R.string.receive_data_error),
+                            color = Color.White
+                        )
+                        Spacer(modifier = Modifier
+                            .height(12.dp)
+                        )
+                        Button(
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+                            onClick = {viewModel.refresh()}
+                        ) {
+                            Text(
+                                text=stringResource(R.string.try_again),
+                                color= Color.Black
+                            )
                         }
                     }
                 }
             }
+
+
             is UiState.Success -> {
                 var query by remember { mutableStateOf("") }
                 var sortBy by remember { mutableStateOf("Alias") }
@@ -110,27 +131,18 @@ fun NodeListScreen(viewModel: NodeViewModel) {
                 }) {
                     Column(Modifier
                         .padding(15.dp)
-                        .pointerInput(Unit) {
-                            detectTapGestures(onTap = {
-                                focusManager.clearFocus()
-                            })
-                        }) {
+                        ) {
 
-                    OutlinedTextField(
-                        value = query,
-                        onValueChange = { query = it },
-                        label = { Text(stringResource(R.string.search_by), color=Color.Black) },
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(top = 8.dp),
-                        keyboardActions = KeyboardActions(
-                            onDone = { focusManager.clearFocus() }
-                        ),
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            imeAction = ImeAction.Done
+                        OutlinedTextField(
+                            value = query,
+                            onValueChange = { query = it },
+                            label = { Text(stringResource(R.string.search_by), color=Color.Black.copy(0.5f)) },
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 8.dp)
+                                    .padding(horizontal = 16.dp)
                         )
-                    )
 
                     SortDropdown(
                         sortBy = sortBy,
@@ -155,7 +167,6 @@ fun NodeListScreen(viewModel: NodeViewModel) {
     }
 }
 
-@Preview(showBackground = true)
 @Composable
 fun NodeCard(node: Node) {
     var expanded by remember { mutableStateOf(false) }
@@ -164,9 +175,8 @@ fun NodeCard(node: Node) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            // anima suavemente a mudança de tamanho
             .animateContentSize()
-            // troca estado ao clicar em qualquer lugar do card
+            .clip(shape = MaterialTheme.shapes.medium)
             .clickable { expanded = !expanded },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {

@@ -12,4 +12,7 @@
     <string name="country">País</string>
     <string name="first_seem">Primeiro visto</string>
     <string name="public_key">chave pública</string>
+    <string name="try_later">Tente novamente mais tarde.</string>
+    <string name="no_connectivity">Sem conexão com a internet</string>
+    <string name="receive_data_error">Erro ao carregar os dados</string>
 </resources>

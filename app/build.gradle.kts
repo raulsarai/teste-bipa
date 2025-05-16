@@ -58,25 +58,16 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-    // Koin básico
     implementation(libs.koin.android)
-
-    // Koin com Jetpack Compose
     implementation(libs.koin.androidx.compose)
-
-    // Outros
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-
-    // Retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.gson)
     implementation(libs.logging.interceptor)
-
     implementation(libs.accompanist.swiperefresh)
-
     implementation (libs.kotlinx.coroutines.core)
     implementation (libs.kotlinx.coroutines.android)
+    implementation(libs.material3)
 }
