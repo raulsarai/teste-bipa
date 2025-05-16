@@ -11,4 +11,5 @@
     <string name="alias">Alias</string>
     <string name="country">País</string>
     <string name="first_seem">Primeiro visto</string>
+    <string name="public_key">chave pública</string>
 </resources>

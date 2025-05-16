@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.bipa.teste.presentation.ui.AppNavigation
 import com.bipa.teste.presentation.viewmodel.NodeViewModel
+import com.bipa.teste.ui.theme.AppTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
 
@@ -15,8 +16,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+        AppTheme{
 
             AppNavigation(nodeViewModel)
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.bipa.teste.presentation.ui
 
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -8,8 +9,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -41,8 +44,10 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bipa.teste.R
+import com.bipa.teste.domain.model.Node
 import com.bipa.teste.presentation.viewmodel.NodeViewModel
 import com.bipa.teste.presentation.viewmodel.UiState
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -53,6 +58,7 @@ fun NodeListScreen(viewModel: NodeViewModel) {
     val uiState = viewModel.uiState
     val refreshing by remember { derivedStateOf { uiState is UiState.Loading } }
     val focusManager = LocalFocusManager.current
+
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -102,7 +108,8 @@ fun NodeListScreen(viewModel: NodeViewModel) {
                 SwipeRefresh(state = rememberSwipeRefreshState(refreshing), onRefresh = {
                     viewModel.refresh()
                 }) {
-                    Column(Modifier.padding(15.dp)
+                    Column(Modifier
+                        .padding(15.dp)
                         .pointerInput(Unit) {
                             detectTapGestures(onTap = {
                                 focusManager.clearFocus()
@@ -129,26 +136,14 @@ fun NodeListScreen(viewModel: NodeViewModel) {
                         sortBy = sortBy,
                         onSortChange = { sortBy = it }
                     )
+
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(horizontal = 16.dp)
                     ) {
                         items(filtered) { node ->
-                            Card(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 8.dp),
-                                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                            ) {
-                                Column(modifier = Modifier.padding(16.dp)) {
-                                    Text(node.alias, style = MaterialTheme.typography.titleMedium)
-                                    Text(stringResource(R.string.country) + " : " + node.country)
-                                    Text(stringResource(R.string.channels) + " : " + node.channels)
-                                    Text(stringResource(R.string.capacity) + " : " + "%.8f BTC".format(node.capacity / 100_000_000.0))
-                                    Text(stringResource(R.string.first_seem) + " : " +  node.firstSeen)
-                                }
-                            }
+                            NodeCard(node)
                         }
                     }
                 }
@@ -159,6 +154,46 @@ fun NodeListScreen(viewModel: NodeViewModel) {
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun NodeCard(node: Node) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            // anima suavemente a mudança de tamanho
+            .animateContentSize()
+            // troca estado ao clicar em qualquer lugar do card
+            .clickable { expanded = !expanded },
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(node.alias, style = MaterialTheme.typography.titleMedium)
+            Text("${stringResource(R.string.country)}: ${node.country}")
+            Text("${stringResource(R.string.channels)}: ${node.channels}")
+            Text("${stringResource(R.string.capacity)}: %.8f BTC".format(node.capacity / 100_000_000.0))
+            Text("${stringResource(R.string.first_seem)}: ${node.firstSeen}")
+
+            if (expanded) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text("${stringResource(R.string.public_key)}: ${node.publicKey}")
+            }
+
+            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
+                Icon(
+                    imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                    contentDescription = if (expanded) stringResource(R.string.close) else stringResource(
+                        R.string.open
+                    )
+                )
+            }
+        }
+    }
+}
+
 
 @Composable
 fun SortDropdown(
