@@ -1,5 +1,5 @@
 package com.bipa.teste.data.remote
 
-class RemoteDataSource(private val api: ApiService) {
-    suspend fun fetchTopNodes() = api.getTopNodes()
+open class RemoteDataSource(private val api: ApiService?) {
+    open suspend fun fetchTopNodes() = api?.getTopNodes()
 }

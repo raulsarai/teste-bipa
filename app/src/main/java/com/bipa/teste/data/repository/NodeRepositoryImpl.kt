@@ -9,13 +9,15 @@ import java.time.format.DateTimeFormatter
 import kotlin.collections.map
 
 class NodeRepositoryImpl(
-    private val remote: RemoteDataSource
+    private val remote: RemoteDataSource,
+    private val zone: ZoneId = ZoneId.systemDefault()
 ) : NodeRepository {
 
     private val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
         .withZone(ZoneId.systemDefault())
+        .withZone(zone)
 
-    override suspend fun getTopNodes(): List<Node> = remote.fetchTopNodes().map {
+    override suspend fun getTopNodes(): List<Node> = remote.fetchTopNodes()!!.map {
         Node(
             publicKey = it.publicKey,
             alias = it.alias ?: "(Sem nome)",
